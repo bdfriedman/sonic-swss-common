@@ -1,7 +1,6 @@
 #pragma once
 
 #include <netlink/netlink.h>
-#include "logger.h"
 
 namespace swss
 {
