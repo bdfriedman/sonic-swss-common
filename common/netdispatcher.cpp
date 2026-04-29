@@ -25,6 +25,11 @@ void NetDispatcher::registerMessageHandler(int nlmsg_type, NetMsg *callback)
     if (m_handlers.find(nlmsg_type) != m_handlers.end())
         throw "Trying to register on already registered netlink message";
 
+    if (m_rawhandlers.find(nlmsg_type) != m_rawhandlers.end())
+    {
+        SWSS_LOG_WARN("Parsed handler for nlmsg_type %d shadows existing raw handler", nlmsg_type);
+    }
+
     m_handlers[nlmsg_type] = callback;
 }
 
@@ -37,6 +42,11 @@ void NetDispatcher::registerRawMessageHandler(int nlmsg_type, NetMsg *callback)
 
     if (m_rawhandlers.find(nlmsg_type) != m_rawhandlers.end())
         throw "Trying to register an already registered netlink message";
+
+    if (m_handlers.find(nlmsg_type) != m_handlers.end())
+    {
+        SWSS_LOG_WARN("Raw handler for nlmsg_type %d is shadowed by parsed handler", nlmsg_type);
+    }
 
     m_rawhandlers[nlmsg_type] = callback;
 }
